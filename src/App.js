@@ -3,13 +3,11 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import {
   Box,
-  Select,
   Slider,
   FormHelperText,
   Button,
   TextField,
   FormControl,
-  MenuItem,
   InputLabel
 } from '@mui/material';
 
@@ -73,36 +71,57 @@ function App() {
           <Form>
             <Box sx={{ maxWidth: 700 }}>
               <FormControl fullWidth>
-                <InputLabel>¿Cuál es tu canal digital de ventas principal?</InputLabel>
-                <Select
+                <TextField
+                  error={Boolean(touched.canal && errors.canal)}
+                  helpertext={touched.canal ? errors.canal : ""}
                   id="canal"
                   name='canal'
+                  label='¿Cuál es tu canal digital de ventas principal?'
                   value={values.canal}
-                  label="Canal"
+                  variant="outlined"
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  select
+                  SelectProps={{ native: true }}
+                  InputLabelProps={{ shrink: true }}
                 >
-                  <MenuItem value={'Formulario Web'}>Formulario Web</MenuItem>
-                  <MenuItem value={'Formulario de Facebook'}>Formulario de Facebook</MenuItem>
-                  <MenuItem value={'Otro'}>Otro</MenuItem>
-                </Select>
+                  <option key={'Formulario Web'} value='Formulario Web'>
+                    Formulario Web
+                  </option>
+                  <option key={'Formulario de Facebook'} value='Formulario de Facebook'>
+                    Formulario de Facebook
+                  </option>
+                  <option key={'Otro'} value='Otro'>
+                    Otro
+                  </option>
+                </TextField>
                 {touched.canal && <FormHelperText>{errors.canal}</FormHelperText>}
                 <br />
                 <br />
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel>Tienes Whatsapp</InputLabel>
-                <Select
+                <TextField
+                  error={Boolean(touched.whatsapp && errors.whatsapp)}
+                  helpertext={touched.whatsapp ? errors.whatsapp : ""}
                   id="whatsapp"
                   name='whatsapp'
+                  label='Tienes Whatsapp'
                   value={values.whatsapp}
-                  label="WhatsApp"
+                  variant="outlined"
                   onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  InputLabelProps={{ shrink: true }}
                 >
-                  <MenuItem value={'No'}>No</MenuItem>
-                  <MenuItem value={'Si, ligado a un telefono'}>Si, ligado a un telefono</MenuItem>
-                  <MenuItem value={'Si, WhatsApp con alguna plataforma'}>Si, WhatsApp con alguna plataforma</MenuItem>
-                </Select>
+                  <option key={'No'} value='No'>
+                    No
+                  </option>
+                  <option key={'Si, ligado a un telefono'} value='Si, ligado a un telefono'>
+                    Si, ligado a un telefono
+                  </option>
+                  <option key={'Si, WhatsApp con alguna plataforma'} value='Si, WhatsApp con alguna plataforma'>
+                    Si, WhatsApp con alguna plataforma
+                  </option>
+                </TextField>
                 {touched.whatsapp && <FormHelperText>{errors.whatsapp}</FormHelperText>}
                 <br />
                 <br />
