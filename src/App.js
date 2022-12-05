@@ -1,4 +1,5 @@
 import './App.css';
+import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import {
   Box,
@@ -15,10 +16,27 @@ import {
 import * as Yup from "yup";
 
 function App() {
-
-  const calcular = () => {
-    console.log('si sirve')
+  const [Ganancia, setGanancia] = useState(0)
+  const calcular = (values) => {
+    let PersonalOperacionActual = 800 * parseInt(values.personas);
+    let VentasMesActual = values.vehiculos * parseInt(values.precio);
+    let EbitdaActual = VentasMesActual * 0.75;
+    let NetoActual = EbitdaActual - PersonalOperacionActual - parseInt(values.inversion);
+    // eslint-disable-next-line
+    let VentasMesAtom = VentasMesActual * 2;
+    let EbitdaAtom = EbitdaActual * 2;
+    let NetoAtom = EbitdaAtom - PersonalOperacionActual - parseInt(values.inversion) - 770;
+    setGanancia(NetoAtom - NetoActual);
+    console.log(values)
+    console.log(NetoActual);
+    console.log(NetoAtom);
+    console.log(Ganancia);
   }
+
+  /* function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } */
+
   return (
     <div className="App">
       <Formik
@@ -42,7 +60,12 @@ function App() {
           inversion: Yup.string().required("El campo es obligatorio"),
           email: Yup.string().email('El email no es válido').required("El campo es obligatorio"),
         })}
-        onSubmit={calcular()}
+        onSubmit={async (
+          values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          calcular(values);
+        }}
       >
         {({ errors, handleChange, handleSubmit, touched, values, handleBlur }) => (
 
@@ -76,7 +99,7 @@ function App() {
                   onChange={handleChange}
                 >
                   <MenuItem value={'No'}>No</MenuItem>
-                  <MenuItem value={'Si, ligado a un telefono'}>Formulario de Facebook</MenuItem>
+                  <MenuItem value={'Si, ligado a un telefono'}>Si, ligado a un telefono</MenuItem>
                   <MenuItem value={'Si, WhatsApp con alguna plataforma'}>Si, WhatsApp con alguna plataforma</MenuItem>
                 </Select>
                 {touched.whatsapp && <FormHelperText>{errors.whatsapp}</FormHelperText>}
@@ -176,6 +199,9 @@ function App() {
           </Form>
         )}
       </Formik>
+      {Ganancia != 0 && <div>
+        <h2>La ganancia es {Ganancia} </h2>
+      </div>}
     </div >
   );
 }
