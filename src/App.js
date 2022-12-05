@@ -27,15 +27,16 @@ function App() {
     let EbitdaAtom = EbitdaActual * 2;
     let NetoAtom = EbitdaAtom - PersonalOperacionActual - parseInt(values.inversion) - 770;
     setGanancia(NetoAtom - NetoActual);
+    setGanancia(numberWithCommas(parseInt(Ganancia.toFixed())))
     console.log(values)
     console.log(NetoActual);
     console.log(NetoAtom);
     console.log(Ganancia);
   }
 
-  /* function numberWithCommas(x) {
+  function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } */
+  }
 
   return (
     <div className="App">
@@ -200,7 +201,7 @@ function App() {
         )}
       </Formik>
       {Ganancia != 0 && <div>
-        <h2>La ganancia es {Ganancia} </h2>
+        <h2>La ganancia es USD {Ganancia} </h2>
       </div>}
     </div >
   );
