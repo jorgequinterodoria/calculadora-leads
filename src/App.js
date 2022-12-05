@@ -200,7 +200,7 @@ function App() {
           </Form>
         )}
       </Formik>
-      {Ganancia != 0 && <div>
+      {Ganancia !== 0 && <div>
         <h2>La ganancia es USD {Ganancia} </h2>
       </div>}
     </div >
