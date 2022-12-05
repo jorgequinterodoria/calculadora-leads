@@ -1,49 +1,20 @@
 import './App.css';
-import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Slider from '@mui/material/Slider';
-import TextField from '@mui/material/TextField';
+import {
+  Box,
+  Select,
+  Slider,
+  FormHelperText,
+  Button,
+  TextField,
+  FormControl,
+  MenuItem,
+  InputLabel
+} from '@mui/material';
+
+import * as Yup from "yup";
 
 function App() {
-
-  const [canal, setCanal] = useState('');
-  const [whatsapp, setWhatsapp] = useState('')
-  const [leads, setLeads] = useState(1000)
-  const [personas, setPersonas] = useState(0)
-  const [vehiculos, setVehiculos] = useState(0)
-  const [precio, setPrecio] = useState(0)
-  const [inversion, setInversion] = useState(0)
-  const [email, setEmail] = useState('');
-
-  const handleChangeCanal = (event) => {
-    setCanal(event.target.value);
-  };
-  const handleChangeWhatsapp = (event) => {
-    setWhatsapp(event.target.value);
-  };
-  const handleChangeLeads = (event) => {
-    setLeads(event.target.value);
-  };
-  const handleChangePersonas = (event) => {
-    setPersonas(event.target.value);
-  };
-  const handleChangeVehiculos = (event) => {
-    setVehiculos(event.target.value);
-  };
-  const handleChangePrecio = (event) => {
-    setPrecio(event.target.value);
-  };
-  const handleChangeInversion = (event) => {
-    setInversion(event.target.value);
-  };
-  const handleChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
 
   const calcular = () => {
     console.log('si sirve')
@@ -52,123 +23,158 @@ function App() {
     <div className="App">
       <Formik
         initialValues={{
-          canal,
-          whatsapp,
-          leads,
-          personas,
-          vehiculos,
-          precio,
-          inversion,
-          email
+          canal: '',
+          whatsapp: '',
+          leads: 1000,
+          personas: 0,
+          vehiculos: 0,
+          precio: 0,
+          inversion: 1000,
+          email: ''
         }}
+        validationSchema={Yup.object().shape({
+          canal: Yup.string().required("El campo es obligatorio"),
+          whatsapp: Yup.string().required("El campo es obligatorio"),
+          leads: Yup.string().required("El campo es obligatorio"),
+          personas: Yup.string().required("El campo es obligatorio"),
+          vehiculos: Yup.string().required("El campo es obligatorio"),
+          precio: Yup.string().required("El campo es obligatorio"),
+          inversion: Yup.string().required("El campo es obligatorio"),
+          email: Yup.string().email('El email no es válido').required("El campo es obligatorio"),
+        })}
         onSubmit={calcular()}
       >
-        <Form>
-          <Box sx={{ maxWidth: 700 }}>
-            <FormControl fullWidth>
-              <InputLabel>¿Cuál es tu canal digital de ventas principal?</InputLabel>
-              <Select
-                id="canal"
-                value={canal}
-                label="Canal"
-                onChange={handleChangeCanal}
+        {({ errors, handleChange, handleSubmit, touched, values, handleBlur }) => (
+
+          <Form>
+            <Box sx={{ maxWidth: 700 }}>
+              <FormControl fullWidth>
+                <InputLabel>¿Cuál es tu canal digital de ventas principal?</InputLabel>
+                <Select
+                  id="canal"
+                  name='canal'
+                  value={values.canal}
+                  label="Canal"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  <MenuItem value={'Formulario Web'}>Formulario Web</MenuItem>
+                  <MenuItem value={'Formulario de Facebook'}>Formulario de Facebook</MenuItem>
+                  <MenuItem value={'Otro'}>Otro</MenuItem>
+                </Select>
+                {touched.canal && <FormHelperText>{errors.canal}</FormHelperText>}
+                <br />
+                <br />
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel>Tienes Whatsapp</InputLabel>
+                <Select
+                  id="whatsapp"
+                  name='whatsapp'
+                  value={values.whatsapp}
+                  label="WhatsApp"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={'No'}>No</MenuItem>
+                  <MenuItem value={'Si, ligado a un telefono'}>Formulario de Facebook</MenuItem>
+                  <MenuItem value={'Si, WhatsApp con alguna plataforma'}>Si, WhatsApp con alguna plataforma</MenuItem>
+                </Select>
+                {touched.whatsapp && <FormHelperText>{errors.whatsapp}</FormHelperText>}
+                <br />
+                <br />
+              </FormControl>
+              <InputLabel>¿Cuántos Leads generas al mes?</InputLabel>
+              <Slider
+                valueLabelDisplay="auto"
+                id='leads'
+                name='leads'
+                min={1000}
+                max={50000}
+                step={50}
+                defaultValue={values.leads}
+                onChange={handleChange}
+              />
+              <InputLabel>{values.leads}</InputLabel>
+              <br />
+              <br />
+              <FormControl fullWidth>
+                <TextField
+                  error={Boolean(touched.personas && errors.personas)}
+                  helpertext={touched.personas ? errors.personas : ""}
+                  id="personas"
+                  name='personas'
+                  label='¿Cuántas personas atienden a esos leads?'
+                  value={values.personas}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+                <br />
+                <br />
+              </FormControl>
+              <FormControl fullWidth>
+                <TextField
+                  error={Boolean(touched.vehiculos && errors.vehiculos)}
+                  helpertext={touched.vehiculos ? errors.vehiculos : ""}
+                  id="vehiculos"
+                  name='vehiculos'
+                  label='¿Cuántos vehículos vendes al mes?'
+                  value={values.vehiculos}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+                <br />
+                <br />
+              </FormControl>
+              <FormControl fullWidth>
+                <TextField
+                  error={Boolean(touched.precio && errors.precio)}
+                  helpertext={touched.precio ? errors.precio : ""}
+                  id="precio"
+                  name='precio'
+                  label='¿Cuál es el precio promedio del vehículo vendido? (USD)?'
+                  value={values.precio}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+                <br />
+                <br />
+              </FormControl>
+              <InputLabel>Inversión en mercadeo (USD)</InputLabel>
+              <Slider
+                valueLabelDisplay="auto"
+                name='inversion'
+                id='inversion'
+                min={50}
+                max={10000}
+                step={10}
+                value={values.inversion}
+                onChange={handleChange}
+              />
+              <InputLabel>$ {values.inversion} USD</InputLabel>
+              <br />
+              <br />
+              <FormControl fullWidth>
+                <TextField
+                  id="email"
+                  name='email'
+                  label='¿Cual es tu correo electrónico?'
+                  value={values.email}
+                  variant="outlined"
+                  onChange={handleChange}
+                />
+                {touched.email && <FormHelperText>{errors.email}</FormHelperText>}
+                <br />
+                <br />
+              </FormControl>
+              <Button
+                variant="contained"
+                onClick={() => handleSubmit()}
               >
-                <MenuItem value={'Formulario Web'}>Formulario Web</MenuItem>
-                <MenuItem value={'Formulario de Facebook'}>Formulario de Facebook</MenuItem>
-                <MenuItem value={'Otro'}>Otro</MenuItem>
-              </Select>
-              <br />
-              <br />
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Tienes Whatsapp</InputLabel>
-              <Select
-                id="whatsapp"
-                value={whatsapp}
-                label="WhatsApp"
-                onChange={handleChangeWhatsapp}
-              >
-                <MenuItem value={'No'}>No</MenuItem>
-                <MenuItem value={'Si, ligado a un telefono'}>Formulario de Facebook</MenuItem>
-                <MenuItem value={'Si, WhatsApp con alguna plataforma'}>Si, WhatsApp con alguna plataforma</MenuItem>
-              </Select>
-              <br />
-              <br />
-            </FormControl>
-            <InputLabel>¿Cuántos Leads generas al mes?</InputLabel>
-            <Slider
-              valueLabelDisplay="auto"
-              min={1000}
-              max={50000}
-              step={50}
-              defaultValue={leads}
-              onChange={handleChangeLeads}
-            />
-            <InputLabel>{leads}</InputLabel>
-            <br />
-            <br />
-            <FormControl fullWidth>
-              <TextField
-                id="personas"
-                name='personas'
-                label='¿Cuántas personas atienden a esos leads?'
-                value={personas}
-                variant="outlined"
-                onChange={handleChangePersonas}
-              />
-              <br />
-              <br />
-            </FormControl>
-            <FormControl fullWidth>
-              <TextField
-                id="vehiculos"
-                name='vehiculos'
-                label='¿Cuántos vehículos vendes al mes?'
-                value={vehiculos}
-                variant="outlined"
-                onChange={handleChangeVehiculos}
-              />
-              <br />
-              <br />
-            </FormControl>
-            <FormControl fullWidth>
-              <TextField
-                id="precio"
-                name='precio'
-                label='¿Cuál es el precio promedio del vehículo vendido? (USD)?'
-                value={precio}
-                variant="outlined"
-                onChange={handleChangePrecio}
-              />
-              <br />
-              <br />
-            </FormControl>
-            <InputLabel>Inversión en mercadeo (USD)</InputLabel>
-            <Slider
-              valueLabelDisplay="auto"
-              min={50}
-              max={10000}
-              step={10}
-              defaultValue={inversion}
-              onChange={handleChangeInversion}
-            />
-            <InputLabel>$ {inversion} USD</InputLabel>
-            <br />
-            <br />
-            <FormControl fullWidth>
-              <TextField
-                id="email"
-                name='email'
-                label='¿Cual es tu correo electrónico?'
-                value={email}
-                variant="outlined"
-                onChange={handleChangeEmail}
-              />
-              <br />
-              <br />
-            </FormControl>
-          </Box>
-        </Form>
+                Calcular
+              </Button>
+            </Box>
+          </Form>
+        )}
       </Formik>
     </div >
   );
