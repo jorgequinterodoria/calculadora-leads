@@ -14,22 +14,35 @@ import {
 import * as Yup from "yup";
 
 function App() {
-  const [Ganancia, setGanancia] = useState(0)
+  const [Ganancia, setGanancia] = useState()
+  const [tasaConversion, setTasaCoversion] = useState(0)
   const calcular = (values) => {
     let PersonalOperacionActual = 800 * parseInt(values.personas);
-    let VentasMesActual = values.vehiculos * parseInt(values.precio);
+    let VentasMesActual = parseInt(values.vehiculos) * parseInt(values.precio);
+    let conversion = ((parseInt(values.vehiculos) / parseInt(values.leads)) * 100).toFixed(1);
     let EbitdaActual = VentasMesActual * 0.75;
     let NetoActual = EbitdaActual - PersonalOperacionActual - parseInt(values.inversion);
     // eslint-disable-next-line
     let VentasMesAtom = VentasMesActual * 2;
     let EbitdaAtom = EbitdaActual * 2;
     let NetoAtom = EbitdaAtom - PersonalOperacionActual - parseInt(values.inversion) - 770;
-    setGanancia(NetoAtom - NetoActual);
-    setGanancia(numberWithCommas(parseInt(Ganancia.toFixed())))
-    console.log(values)
-    console.log(NetoActual);
-    console.log(NetoAtom);
-    console.log(Ganancia);
+    let gain = NetoAtom - NetoActual
+    setGanancia(gain.toFixed());
+    setGanancia(numberWithCommas(Ganancia))
+    setTasaCoversion(conversion)
+    console.log('personas: ', parseInt(values.personas))
+    console.log('precio: ', parseInt(values.precio))
+    console.log('vehiculos: ', parseInt(values.vehiculos))
+    console.log('OperacionActual: ', parseInt(PersonalOperacionActual))
+    console.log('Ventas Actuales: ', parseInt(VentasMesActual))
+    console.log('tasa de conversion:', conversion)
+    console.log('EbitdaActual:', EbitdaActual)
+    console.log('NetoActual:', NetoActual)
+    console.log('VentasMesAtom:', VentasMesAtom)
+    console.log('EbitdaAtom:', EbitdaAtom)
+    console.log('NetoAtom:', NetoAtom)
+    console.log('Ganancia:', Ganancia)
+
   }
 
   function numberWithCommas(x) {
@@ -40,12 +53,12 @@ function App() {
     <div className="App">
       <Formik
         initialValues={{
-          canal: '',
-          whatsapp: '',
+          canal: 'Formulario Web',
+          whatsapp: 'No',
           leads: 1000,
-          personas: 0,
-          vehiculos: 0,
-          precio: 0,
+          personas: 1,
+          vehiculos: 1,
+          precio: 20000,
           inversion: 1000,
           email: ''
         }}
@@ -70,13 +83,14 @@ function App() {
 
           <Form>
             <Box sx={{ maxWidth: 700 }}>
+              <InputLabel>¿Cuál es tu canal digital de ventas principal?</InputLabel>
               <FormControl fullWidth>
                 <TextField
                   error={Boolean(touched.canal && errors.canal)}
                   helpertext={touched.canal ? errors.canal : ""}
                   id="canal"
                   name='canal'
-                  label='¿Cuál es tu canal digital de ventas principal?'
+                  label=''
                   value={values.canal}
                   variant="outlined"
                   onChange={handleChange}
@@ -98,13 +112,15 @@ function App() {
                 <br />
                 <br />
               </FormControl>
+              <InputLabel>Tienes Whatsapp</InputLabel>
               <FormControl fullWidth>
                 <TextField
+                  className='whatsapp'
                   error={Boolean(touched.whatsapp && errors.whatsapp)}
                   helpertext={touched.whatsapp ? errors.whatsapp : ""}
                   id="whatsapp"
                   name='whatsapp'
-                  label='Tienes Whatsapp'
+                  label=''
                   value={values.whatsapp}
                   variant="outlined"
                   onChange={handleChange}
@@ -184,7 +200,7 @@ function App() {
               </FormControl>
               <InputLabel>Inversión en mercadeo (USD)</InputLabel>
               <Slider
-                valueLabelDisplay="auto"
+                valueLabelDisplay="on"
                 name='inversion'
                 id='inversion'
                 min={50}
@@ -192,18 +208,22 @@ function App() {
                 step={10}
                 value={values.inversion}
                 onChange={handleChange}
+
               />
               <InputLabel>$ {values.inversion} USD</InputLabel>
               <br />
               <br />
+              <InputLabel>¿Cual es tu correo electrónico?</InputLabel>
               <FormControl fullWidth>
                 <TextField
+                  placeholder='Email'
                   id="email"
                   name='email'
-                  label='¿Cual es tu correo electrónico?'
+                  label=''
                   value={values.email}
                   variant="outlined"
                   onChange={handleChange}
+
                 />
                 {touched.email && <FormHelperText>{errors.email}</FormHelperText>}
                 <br />
@@ -212,6 +232,8 @@ function App() {
               <Button
                 variant="contained"
                 onClick={() => handleSubmit()}
+                className='Boton'
+
               >
                 Calcular
               </Button>
@@ -219,8 +241,9 @@ function App() {
           </Form>
         )}
       </Formik>
-      {Ganancia !== 0 && <div>
+      {Ganancia !== 0 && <div className='resultado'>
         <h2>La ganancia es USD {Ganancia} </h2>
+        <h2>{tasaConversion}% de conversión en canal digital </h2>
       </div>}
     </div >
   );

@@ -4,3 +4,13 @@
   text-align: center;
 }
 
+.whatsapp{
+  color: blueviolet;
+}
+.boton{
+  color: blueviolet !important;
+}
+
+.resultado{
+  background-color: orange;
+}
